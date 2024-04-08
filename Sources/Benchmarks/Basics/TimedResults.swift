@@ -10,9 +10,11 @@ public struct TimedResults {
  }
 
  public var average: Time { total.amortized(over: size) }
- 
+
  public init(id: String?, times: [Time], results: [Any]) {
-  if let id { self.id = id  == "nil" ? nil : id }
+  if let id {
+   self.id = id == "nil" ? nil : id
+  }
   self.times = times
   self.results = results
  }
