@@ -1,13 +1,17 @@
 import struct Time.Size
+import Utilities
+
 /// A basic protocol for measuring performance on an algorithm
 public protocol BenchmarkProtocol: Identifiable {
  /// The number of times to warmup before benchmarking an algorithm
  var warmup: Size { get }
  /// The number of times to benchmark an algorithm
  var iterations: Size { get }
+ // WARNING: not implemented
  /// The threshold for the benchmark to cancel
  var timeout: Double { get }
  var benchmarkName: String? { get }
+ var sourceLocation: SourceLocation? { get }
  func setUp() async throws
  func cleanUp() async throws
  /// Performs when a benchmark completes successfully
@@ -15,6 +19,8 @@ public protocol BenchmarkProtocol: Identifiable {
 }
 
 public extension BenchmarkProtocol {
+ @_disfavoredOverload
+ var sourceLocation: SourceLocation? { nil }
  @_disfavoredOverload
  var warmup: Size { 0 }
  @_disfavoredOverload

@@ -14,7 +14,8 @@ let package = Package(
    name: "Benchmarks",
    dependencies: [
     .product(name: "Time", package: "time"),
-    .product(name: "Core", package: "core")
+    .product(name: "Core", package: "core"),
+    .product(name: "Utilities", package: "core")
    ]
   ),
   .testTarget(name: "BenchmarksTests", dependencies: ["Benchmarks"])

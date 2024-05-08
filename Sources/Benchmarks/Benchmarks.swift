@@ -1,6 +1,7 @@
 import struct Core.EmptyID
 import protocol Foundation.LocalizedError
 import Time
+import Utilities
 
 protocol Benchmark: BenchmarkProtocol {
  associatedtype Result
@@ -156,6 +157,7 @@ public extension Measure {
 
 public struct Benchmarks<ID: Hashable> {
  public var id: ID?
+ public var sourceLocation: SourceLocation?
  // TODO: create a global iterations / timeout to override where they don't exist
  // a default to replace nil variables, even though some bencharks have a
  // default
@@ -173,12 +175,20 @@ public struct Benchmarks<ID: Hashable> {
 
  public init(
   _ id: ID,
+  fileID: String = #fileID,
+  line: Int = #line,
+  column: Int = #column,
   setUp: (() async throws -> ())? = nil,
   onCompletion: (() async throws -> ())? = nil,
   cleanUp: (() async throws -> ())? = nil,
   @BenchmarksBuilder _ benchmarks: @escaping () -> [any BenchmarkProtocol]
  ) {
   self.id = id
+  sourceLocation = SourceLocation(
+   fileID: fileID,
+   line: line,
+   column: column
+  )
   setup = setUp
   complete = onCompletion
   cleanup = cleanUp
@@ -186,11 +196,19 @@ public struct Benchmarks<ID: Hashable> {
  }
 
  public init(
+  fileID: String = #fileID,
+  line: Int = #line,
+  column: Int = #column,
   setUp: (() async throws -> ())? = nil,
   onCompletion: (() async throws -> ())? = nil,
   cleanUp: (() async throws -> ())? = nil,
   @BenchmarksBuilder _ benchmarks: @escaping () -> [any BenchmarkProtocol]
  ) where ID == EmptyID {
+  sourceLocation = SourceLocation(
+   fileID: fileID,
+   line: line,
+   column: column
+  )
   setup = setUp
   complete = onCompletion
   cleanup = cleanUp
@@ -199,12 +217,20 @@ public struct Benchmarks<ID: Hashable> {
 
  public init(
   _ id: ID? = nil,
+  fileID: String = #fileID,
+  line: Int = #line,
+  column: Int = #column,
   setUp: (() async throws -> ())? = nil,
   onCompletion: (() async throws -> ())? = nil,
   cleanUp: (() async throws -> ())? = nil,
   _ items: any BenchmarkProtocol...
  ) {
   self.id = id
+  sourceLocation = SourceLocation(
+   fileID: fileID,
+   line: line,
+   column: column
+  )
   setup = setUp
   complete = onCompletion
   cleanup = cleanUp
@@ -212,11 +238,19 @@ public struct Benchmarks<ID: Hashable> {
  }
 
  public init(
+  fileID: String = #fileID,
+  line: Int = #line,
+  column: Int = #column,
   setUp: (() async throws -> ())? = nil,
   onCompletion: (() async throws -> ())? = nil,
   cleanUp: (() async throws -> ())? = nil,
   _ items: any BenchmarkProtocol...
  ) where ID == EmptyID {
+  sourceLocation = SourceLocation(
+   fileID: fileID,
+   line: line,
+   column: column
+  )
   setup = setUp
   complete = onCompletion
   cleanup = cleanUp
