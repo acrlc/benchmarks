@@ -15,6 +15,7 @@ let benchmarks = Benchmarks("Testing") {
 
 // accumulated results
 let results = try await benchmarks()
+
 // print results
 for offset in results.keys.sorted() {
  let result = results[offset]!
