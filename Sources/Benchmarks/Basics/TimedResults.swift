@@ -6,7 +6,7 @@ public struct TimedResults {
 
  public var size: Size { Size(times.count) }
  public var total: Time {
-  times.reduce(Time.zero) { Time($0.seconds + $1.seconds) }
+  times.reduce(Time.zero) { $0 + $1 }
  }
 
  public var average: Time { total.amortized(over: size) }

@@ -266,19 +266,19 @@ public struct Benchmarks<ID: Hashable> {
   public var description: String { errorDescription! }
  }
 
- @discardableResult
  // TODO: apply conditions such as expected returns and specific inputs
+ @discardableResult
  public func callAsFunction() async throws -> [Int: TimedResults] {
   let items = items()
   guard !items.isEmpty else {
    throw Error.empty
   }
 
+  var results: [Int: TimedResults] = .empty
+
   return try await withThrowingTaskGroup(
-   of: (Int, TimedResults)
-    .self
+   of: (Int, TimedResults).self
   ) { group in
-   var results: [Int: TimedResults] = .empty
    for (offset, benchmark) in items.enumerated() {
     assert(benchmark.iterations > 0)
 
@@ -294,13 +294,13 @@ public struct Benchmarks<ID: Hashable> {
       var results: [Any] = []
 
       // warmup time
-      for _ in 0 ..< benchmark.warmup.rawValue {
+      for _ in benchmark.warmup {
        _ = try await function()
        try await benchmark.onCompletion()
       }
 
       // benchmark time
-      for _ in 0 ..< benchmark.iterations.rawValue {
+      for _ in benchmark.iterations {
        var timer = Timer()
        timer.fire()
        let result = try await function()
@@ -343,6 +343,8 @@ public struct Benchmarks<ID: Hashable> {
      try await items[offset].cleanUp()
     }
    }
+
+   try await group.waitForAll()
    return results
   }
  }
